@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xwx.dao.EquipmentInformationMapper" >
+  <resultMap id="BaseResultMap" type="com.xwx.model.EquipmentInformation" >
+    <id column="equipmentId" property="equipmentid" jdbcType="INTEGER" />
+    <result column="equipmentNumber" property="equipmentnumber" jdbcType="INTEGER" />
+    <result column="equipmentType" property="equipmenttype" jdbcType="INTEGER" />
+    <result column="CAL" property="cal" jdbcType="INTEGER" />
+    <result column="equipmentState" property="equipmentstate" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+   
+   <association property="area" column="areaId" select="selectByPrimaryKey">
+   </association>
+  </resultMap> 
+  
+  
+  
+  <sql id="Base_Column_List" >
+    equipmentId, equipmentNumber, equipmentType, CAL, equipmentState, remark, Area_areaId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from equipmentinformation
+    where equipmentId = #{equipmentid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from equipmentinformation
+    where equipmentId = #{equipmentid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xwx.model.EquipmentInformation" >
+    insert into equipmentinformation (equipmentId, equipmentNumber, equipmentType, 
+      CAL, equipmentState, remark, 
+      Area_areaId)
+    values (#{equipmentid,jdbcType=INTEGER}, #{equipmentnumber,jdbcType=INTEGER}, #{equipmenttype,jdbcType=INTEGER}, 
+      #{cal,jdbcType=INTEGER}, #{equipmentstate,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{areaAreaid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xwx.model.EquipmentInformation" >
+    insert into equipmentinformation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="equipmentid != null" >
+        equipmentId,
+      </if>
+      <if test="equipmentnumber != null" >
+        equipmentNumber,
+      </if>
+      <if test="equipmenttype != null" >
+        equipmentType,
+      </if>
+      <if test="cal != null" >
+        CAL,
+      </if>
+      <if test="equipmentstate != null" >
+        equipmentState,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="areaAreaid != null" >
+        Area_areaId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="equipmentid != null" >
+        #{equipmentid,jdbcType=INTEGER},
+      </if>
+      <if test="equipmentnumber != null" >
+        #{equipmentnumber,jdbcType=INTEGER},
+      </if>
+      <if test="equipmenttype != null" >
+        #{equipmenttype,jdbcType=INTEGER},
+      </if>
+      <if test="cal != null" >
+        #{cal,jdbcType=INTEGER},
+      </if>
+      <if test="equipmentstate != null" >
+        #{equipmentstate,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="areaAreaid != null" >
+        #{areaAreaid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xwx.model.EquipmentInformation" >
+    update equipmentinformation
+    <set >
+      <if test="equipmentnumber != null" >
+        equipmentNumber = #{equipmentnumber,jdbcType=INTEGER},
+      </if>
+      <if test="equipmenttype != null" >
+        equipmentType = #{equipmenttype,jdbcType=INTEGER},
+      </if>
+      <if test="cal != null" >
+        CAL = #{cal,jdbcType=INTEGER},
+      </if>
+      <if test="equipmentstate != null" >
+        equipmentState = #{equipmentstate,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="areaAreaid != null" >
+        Area_areaId = #{areaAreaid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where equipmentId = #{equipmentid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xwx.model.EquipmentInformation" >
+    update equipmentinformation
+    set equipmentNumber = #{equipmentnumber,jdbcType=INTEGER},
+      equipmentType = #{equipmenttype,jdbcType=INTEGER},
+      CAL = #{cal,jdbcType=INTEGER},
+      equipmentState = #{equipmentstate,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      Area_areaId = #{areaAreaid,jdbcType=INTEGER}
+    where equipmentId = #{equipmentid,jdbcType=INTEGER}
+  </update>
+</mapper>

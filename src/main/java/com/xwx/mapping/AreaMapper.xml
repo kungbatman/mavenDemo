@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xwx.dao.AreaMapper" >
+  <resultMap id="BaseResultMap" type="com.xwx.model.Area" >
+    <id column="areaId" property="areaid" jdbcType="INTEGER" />
+    <result column="addressNumber" property="addressnumber" jdbcType="VARCHAR" />
+    <result column="areaName" property="areaname" jdbcType="VARCHAR" />
+    <result column="areaLevel" property="arealevel" jdbcType="VARCHAR" />
+    <result column="higherAreaNumber" property="higherareanumber" jdbcType="VARCHAR" />
+    <result column="higherAreaName" property="higherareaname" jdbcType="VARCHAR" />
+    <result column="validTags" property="validtags" jdbcType="VARCHAR" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    areaId, addressNumber, areaName, areaLevel, higherAreaNumber, higherAreaName, validTags
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from area
+    where areaId = #{areaid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from area
+    where areaId = #{areaid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xwx.model.Area" >
+    insert into area (areaId, addressNumber, areaName, 
+      areaLevel, higherAreaNumber, higherAreaName, 
+      validTags)
+    values (#{areaid,jdbcType=INTEGER}, #{addressnumber,jdbcType=VARCHAR}, #{areaname,jdbcType=VARCHAR}, 
+      #{arealevel,jdbcType=VARCHAR}, #{higherareanumber,jdbcType=VARCHAR}, #{higherareaname,jdbcType=VARCHAR}, 
+      #{validtags,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xwx.model.Area" >
+    insert into area
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="areaid != null" >
+        areaId,
+      </if>
+      <if test="addressnumber != null" >
+        addressNumber,
+      </if>
+      <if test="areaname != null" >
+        areaName,
+      </if>
+      <if test="arealevel != null" >
+        areaLevel,
+      </if>
+      <if test="higherareanumber != null" >
+        higherAreaNumber,
+      </if>
+      <if test="higherareaname != null" >
+        higherAreaName,
+      </if>
+      <if test="validtags != null" >
+        validTags,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="areaid != null" >
+        #{areaid,jdbcType=INTEGER},
+      </if>
+      <if test="addressnumber != null" >
+        #{addressnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="areaname != null" >
+        #{areaname,jdbcType=VARCHAR},
+      </if>
+      <if test="arealevel != null" >
+        #{arealevel,jdbcType=VARCHAR},
+      </if>
+      <if test="higherareanumber != null" >
+        #{higherareanumber,jdbcType=VARCHAR},
+      </if>
+      <if test="higherareaname != null" >
+        #{higherareaname,jdbcType=VARCHAR},
+      </if>
+      <if test="validtags != null" >
+        #{validtags,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xwx.model.Area" >
+    update area
+    <set >
+      <if test="addressnumber != null" >
+        addressNumber = #{addressnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="areaname != null" >
+        areaName = #{areaname,jdbcType=VARCHAR},
+      </if>
+      <if test="arealevel != null" >
+        areaLevel = #{arealevel,jdbcType=VARCHAR},
+      </if>
+      <if test="higherareanumber != null" >
+        higherAreaNumber = #{higherareanumber,jdbcType=VARCHAR},
+      </if>
+      <if test="higherareaname != null" >
+        higherAreaName = #{higherareaname,jdbcType=VARCHAR},
+      </if>
+      <if test="validtags != null" >
+        validTags = #{validtags,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where areaId = #{areaid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xwx.model.Area" >
+    update area
+    set addressNumber = #{addressnumber,jdbcType=VARCHAR},
+      areaName = #{areaname,jdbcType=VARCHAR},
+      areaLevel = #{arealevel,jdbcType=VARCHAR},
+      higherAreaNumber = #{higherareanumber,jdbcType=VARCHAR},
+      higherAreaName = #{higherareaname,jdbcType=VARCHAR},
+      validTags = #{validtags,jdbcType=VARCHAR}
+    where areaId = #{areaid,jdbcType=INTEGER}
+  </update>
+</mapper>

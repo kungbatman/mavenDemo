@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xwx.dao.HistoricalRecordsMapper">
+	<resultMap id="BaseResultMap" type="com.xwx.model.HistoricalRecords">
+		<id column="recordId" property="recordid" jdbcType="INTEGER" />
+		<!-- <id column="Equipmentinformation_equipmentId" property="equipmentinformationEquipmentid" 
+			jdbcType="INTEGER" /> <id column="Area_areaId" property="areaAreaid" jdbcType="INTEGER" 
+			/> -->
+		<result column="meterNumber" property="meternumber" jdbcType="INTEGER" />
+		<result column="areaNumber" property="areanumber" jdbcType="INTEGER" />
+		<result column="instantaneousFlow" property="instantaneousflow"
+			jdbcType="VARCHAR" />
+		<result column="cumulativeFlow" property="cumulativeflow"
+			jdbcType="VARCHAR" />
+		<result column="positiveCumulativeFlow" property="positivecumulativeflow"
+			jdbcType="VARCHAR" />
+		<result column="waterSupplyTemperature" property="watersupplytemperature"
+			jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="time" property="time" jdbcType="DATE" />
+
+		<association property="area" column="Area_areaId"
+			select="com.xwx.dao.AreaMapper.selectByPrimaryKey">
+			<!-- <id column="areaId" property="areaid" jdbcType="INTEGER" /> <result 
+				column="addressNumber" property="addressnumber" jdbcType="VARCHAR" /> <result 
+				column="areaName" property="areaname" jdbcType="VARCHAR" /> <result column="areaLevel" 
+				property="arealevel" jdbcType="VARCHAR" /> <result column="higherAreaNumber" 
+				property="higherareanumber" jdbcType="VARCHAR" /> <result column="higherAreaName" 
+				property="higherareaname" jdbcType="VARCHAR" /> <result column="validTags" 
+				property="validtags" jdbcType="VARCHAR" /> -->
+		</association>
+		<!-- 设备 -->
+		<association property="equipmentInformation" column="Equipmentinformation_equipmentId"
+			select="com.xwx.dao.EquipmentInformationMapper.selectByPrimaryKey">
+
+			<!-- <id column="equipmentId" property="equipmentid" jdbcType="INTEGER" 
+				/> <result column="equipmentNumber" property="equipmentnumber" jdbcType="INTEGER" 
+				/> <result column="equipmentType" property="equipmenttype" jdbcType="INTEGER" 
+				/> <result column="CAL" property="cal" jdbcType="INTEGER" /> <result column="equipmentState" 
+				property="equipmentstate" jdbcType="INTEGER" /> <result column="remark" property="remark" 
+				jdbcType="VARCHAR" /> -->
+		</association>
+
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		recordId, Equipmentinformation_equipmentId, Area_areaId,
+		meterNumber,
+		areaNumber,
+		instantaneousFlow, cumulativeFlow,
+		positiveCumulativeFlow, waterSupplyTemperature,
+		state, time
+	</sql>
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="com.xwx.model.HistoricalRecords">
+		select
+		*
+		from historicalrecords h , area a ,
+		equipmentinformation e
+		where h.Area_areaId = a.areaId and
+		h.Equipmentinformation_equipmentId =
+		e.equipmentId and h.recordId =
+		#{recordid,jdbcType=INTEGER}
+	</select>
+	<!--查询所有 -->
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		*
+		from historicalrecords
+	</select>
+	<!-- 按照条件查询 -->
+	<select id="selectSelective" resultMap="BaseResultMap">
+		select * from historicalrecords h , area a ,
+		equipmentinformation e
+		where h.Area_areaId = a.areaId and
+		h.Equipmentinformation_equipmentId
+		=e.equipmentId
+		<if test="area_Id !=null and area_Id != '' ">
+			and a.areaId = #{area_Id,jdbcType=INTEGER}
+		</if>
+
+		<if test="equipmentId !=null and equipmentId != '' ">
+			and e.equipmentId =#{equipmentId,jdbcType=INTEGER}
+		</if>
+		<!-- 查询条件：创建开始时间 -->
+		<if test="createdBegintime !=null and createdBegintime != '' ">
+			AND e.time <![CDATA[>=]]> #{createdBegintime}	
+		</if>
+		<if test="createdEndtime !=null and createdEndtime != '' ">
+			AND e.time <![CDATA[>=]]> #{createdEndtime}		
+		</if>
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="com.xwx.model.HistoricalRecords">
+		delete from
+		historicalrecords
+		where recordId = #{recordid,jdbcType=INTEGER}
+		and
+		Equipmentinformation_equipmentId =
+		#{equipmentinformationEquipmentid,jdbcType=INTEGER}
+		and Area_areaId =
+		#{areaAreaid,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.xwx.model.HistoricalRecords">
+		insert into historicalrecords
+		(recordId,
+		Equipmentinformation_equipmentId,
+		Area_areaId, meterNumber,
+		areaNumber,
+		instantaneousFlow, cumulativeFlow, positiveCumulativeFlow,
+		waterSupplyTemperature, state, time
+		)
+		values
+		(#{recordid,jdbcType=INTEGER},
+		#{equipmentinformationEquipmentid,jdbcType=INTEGER},
+		#{areaAreaid,jdbcType=INTEGER}, #{meternumber,jdbcType=INTEGER},
+		#{areanumber,jdbcType=INTEGER},
+		#{instantaneousflow,jdbcType=VARCHAR},
+		#{cumulativeflow,jdbcType=VARCHAR},
+		#{positivecumulativeflow,jdbcType=VARCHAR},
+		#{watersupplytemperature,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR},
+		#{time,jdbcType=DATE}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.xwx.model.HistoricalRecords">
+		insert into historicalrecords
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="recordid != null">
+				recordId,
+			</if>
+			<if test="equipmentinformationEquipmentid != null">
+				Equipmentinformation_equipmentId,
+			</if>
+			<if test="areaAreaid != null">
+				Area_areaId,
+			</if>
+			<if test="meternumber != null">
+				meterNumber,
+			</if>
+			<if test="areanumber != null">
+				areaNumber,
+			</if>
+			<if test="instantaneousflow != null">
+				instantaneousFlow,
+			</if>
+			<if test="cumulativeflow != null">
+				cumulativeFlow,
+			</if>
+			<if test="positivecumulativeflow != null">
+				positiveCumulativeFlow,
+			</if>
+			<if test="watersupplytemperature != null">
+				waterSupplyTemperature,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="recordid != null">
+				#{recordid,jdbcType=INTEGER},
+			</if>
+			<if test="equipmentinformationEquipmentid != null">
+				#{equipmentinformationEquipmentid,jdbcType=INTEGER},
+			</if>
+			<if test="areaAreaid != null">
+				#{areaAreaid,jdbcType=INTEGER},
+			</if>
+			<if test="meternumber != null">
+				#{meternumber,jdbcType=INTEGER},
+			</if>
+			<if test="areanumber != null">
+				#{areanumber,jdbcType=INTEGER},
+			</if>
+			<if test="instantaneousflow != null">
+				#{instantaneousflow,jdbcType=VARCHAR},
+			</if>
+			<if test="cumulativeflow != null">
+				#{cumulativeflow,jdbcType=VARCHAR},
+			</if>
+			<if test="positivecumulativeflow != null">
+				#{positivecumulativeflow,jdbcType=VARCHAR},
+			</if>
+			<if test="watersupplytemperature != null">
+				#{watersupplytemperature,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=DATE},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.xwx.model.HistoricalRecords">
+		update historicalrecords
+		<set>
+			<if test="meternumber != null">
+				meterNumber = #{meternumber,jdbcType=INTEGER},
+			</if>
+			<if test="areanumber != null">
+				areaNumber = #{areanumber,jdbcType=INTEGER},
+			</if>
+			<if test="instantaneousflow != null">
+				instantaneousFlow =
+				#{instantaneousflow,jdbcType=VARCHAR},
+			</if>
+			<if test="cumulativeflow != null">
+				cumulativeFlow = #{cumulativeflow,jdbcType=VARCHAR},
+			</if>
+			<if test="positivecumulativeflow != null">
+				positiveCumulativeFlow =
+				#{positivecumulativeflow,jdbcType=VARCHAR},
+			</if>
+			<if test="watersupplytemperature != null">
+				waterSupplyTemperature =
+				#{watersupplytemperature,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=DATE},
+			</if>
+		</set>
+		where recordId = #{recordid,jdbcType=INTEGER}
+		and
+		Equipmentinformation_equipmentId =
+		#{equipmentinformationEquipmentid,jdbcType=INTEGER}
+		and Area_areaId =
+		#{areaAreaid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.xwx.model.HistoricalRecords">
+		update
+		historicalrecords
+		set meterNumber = #{meternumber,jdbcType=INTEGER},
+		areaNumber = #{areanumber,jdbcType=INTEGER},
+		instantaneousFlow =
+		#{instantaneousflow,jdbcType=VARCHAR},
+		cumulativeFlow =
+		#{cumulativeflow,jdbcType=VARCHAR},
+		positiveCumulativeFlow =
+		#{positivecumulativeflow,jdbcType=VARCHAR},
+		waterSupplyTemperature =
+		#{watersupplytemperature,jdbcType=VARCHAR},
+		state =
+		#{state,jdbcType=VARCHAR},
+		time = #{time,jdbcType=DATE}
+		where recordId =
+		#{recordid,jdbcType=INTEGER}
+		and Equipmentinformation_equipmentId =
+		#{equipmentinformationEquipmentid,jdbcType=INTEGER}
+		and Area_areaId =
+		#{areaAreaid,jdbcType=INTEGER}
+	</update>
+</mapper>
